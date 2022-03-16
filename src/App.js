@@ -5,7 +5,6 @@ const App = () => {
     { name: 'Arto Hellas', phone: '8999001023', id:1 }
   ])
   
-  console.log("🚀 ~ file: App.js ~ line 5 ~ App ~ persons", persons)
   const [filterList, setFilterList] = useState([...persons])
 
   const initialPerson = {
@@ -33,6 +32,10 @@ const App = () => {
     
   }
 
+  const onChangeForm = (event) => {
+    const input = event.target.id
+    setNewPerson({...newPerson, [input]:event.target.value })
+  }
 
   const filterNameHandler = (event) => {
     const value = (event.target.value).toLowerCase()
@@ -59,7 +62,7 @@ const App = () => {
             id='name'
             type="text" 
             value={newPerson.name} 
-            onChange={event => setNewPerson({...newPerson, name:event.target.value })} />
+            onChange={onChangeForm} />
         </div>
         <div>
           <label htmlFor="phone">Phone: </label>
@@ -67,7 +70,7 @@ const App = () => {
             id='phone'
             type="text" 
             value={newPerson.phone} 
-            onChange={event => setNewPerson({...newPerson, phone:event.target.value })} />
+            onChange={onChangeForm} />
         </div>
         <div>
           <button
