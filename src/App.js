@@ -1,94 +1,106 @@
-import { useState } from 'react'
+import axios from 'axios'
+
+import personService from './services/personService'
+
+import { useState, useEffect } from 'react'
+
+import PersonForm from './components/PersonForm'
+import Persons from './components/Persons'
+import Filter from './components/Filter'
 
 const App = () => {
-  const [persons, setPersons] = useState([
-    { name: 'Arto Hellas', phone: '8999001023', id:1 }
-  ])
+  const [persons, setPersons] = useState([])
+
   
   const [filterList, setFilterList] = useState([...persons])
 
   const initialPerson = {
     name: '',
-    phone: ''
+    number: ''
   }
   const [newPerson, setNewPerson] = useState(initialPerson)
-
+  
   const addPerson = (event) => {
     event.preventDefault()
 
     const nameExist = persons.some(person => person.name === newPerson.name)
    
-    if(nameExist) return alert(`${newPerson.name} is already added to phonebook`)
+    if(nameExist) {
+      const confirm = window.confirm(
+        `${newPerson.name} is already added to phonebook, replace the old number with new one`
+      )
+      
+      if (confirm) {
+        const personToUpdate = persons.find(person => person.name === newPerson.name)
+        personService
+          .update(personToUpdate.id, {...newPerson, number: newPerson.number})
+          .then(returnedPerson => {
+            setPersons(persons.map(person => person.id !== personToUpdate.id ? person : returnedPerson ))
+            setFilterList(persons.map(person => person.id !== personToUpdate.id ? person : returnedPerson ))
+          })
+      }
+      return 
+    }
     const personObject = {
       id: persons.length + 1,
       name: newPerson.name,
-      phone: newPerson.phone
+      number: newPerson.number
     }
 
-    setPersons(persons.concat(personObject))
-    setFilterList(persons.concat(personObject))
+    personService
+     .create(personObject)
+     .then(createdObject => {
+       setPersons(persons.concat(createdObject))
+       setFilterList(persons.concat(createdObject))
+       setNewPerson(initialPerson)
+      })
     
-    setNewPerson(initialPerson)
+    }
+
+    const onChangeForm = (event) => {
+      const input = event.target.id
+      setNewPerson({...newPerson, [input]:event.target.value })
+    }
     
-  }
-
-  const onChangeForm = (event) => {
-    const input = event.target.id
-    setNewPerson({...newPerson, [input]:event.target.value })
-  }
-
-  const filterNameHandler = (event) => {
-    const value = (event.target.value).toLowerCase()
+    const onPersonDelete = (event) => {
+      const personId = Number(event.target.id)
+      const personToDelete = persons.find(person => person.id === personId)
+      
+      if (!personToDelete) return 
+      
+      const confirm = window.confirm(`Delete ${personToDelete.name} ?`) 
+      if (confirm) {
+        personService
+        .deletePerson(personToDelete.id)
+        .then(() => {
+          setPersons(persons.filter(person => person.id !== personToDelete.id))
+          setFilterList(persons.filter(person => person.id !== personToDelete.id))
+        })
+      }
+      // personService.deletePerson(event.target.id)
+    }
     
-    if(!value) return setFilterList([...persons])
-
-    const findedPersons = persons.filter(person => (person.name.toLowerCase()).includes(value))
-    setFilterList([...findedPersons])
-  }
-
-  return (
-    <div>
-      <h2>Phonebook</h2>
+    useEffect(() => {
+      personService
+        .getAll()
+        .then(personData => {
+          setPersons(personData)
+          setFilterList(personData)
+        })
+    }, [])
+    
+    return (
       <div>
-        <label htmlFor="filterName">Filter by name:</label>
-        <input id="filterName" type="text" onChange={filterNameHandler}/>
-      </div>
+      <h2>Phonebook</h2>
+
+      <Filter filterList={filterList} setFilterList={setFilterList} persons={persons} />
 
       <h2>Add new</h2>
-      <form onSubmit={addPerson}>
-        <div>
-          <label htmlFor="name">Name: </label>
-          <input 
-            id='name'
-            type="text" 
-            value={newPerson.name} 
-            onChange={onChangeForm} />
-        </div>
-        <div>
-          <label htmlFor="phone">Phone: </label>
-          <input 
-            id='phone'
-            type="text" 
-            value={newPerson.phone} 
-            onChange={onChangeForm} />
-        </div>
-        <div>
-          <button
-           type="submit"
-           >add</button>
-        </div>
-      </form>
+      
+      <PersonForm onSubmit={addPerson} onChange={onChangeForm} newPerson={newPerson} />
+
       <h2>Numbers</h2>
-      {filterList.map(person => (
-        <div key={person.id}>
-          <p>
-            Name: {person.name}
-          </p>
-          <p>
-            Phone: {person.phone}
-          </p>
-        </div>
-      ))}
+      <Persons personList={filterList} deleteAction={onPersonDelete}/>
     </div>
   )
 }
