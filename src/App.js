@@ -37,6 +37,7 @@ const App = () => {
           .then(returnedPerson => {
             setPersons(persons.map(person => person.id !== personToUpdate.id ? person : returnedPerson ))
             setFilterList(persons.map(person => person.id !== personToUpdate.id ? person : returnedPerson ))
+            setNewPerson(initialPerson)
           })
       }
       return 
