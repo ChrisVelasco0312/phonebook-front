@@ -10,7 +10,7 @@ const Filter = ({setFilterList, persons}) => {
   }
 
   return (
-      <div>
+      <div className="phonebook-filter">
         <label htmlFor="filterName">Filter by name:</label>
         <input id="filterName" type="text" onChange={filterNameHandler}/>
       </div>

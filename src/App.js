@@ -1,5 +1,3 @@
-import axios from 'axios'
-
 import personService from './services/personService'
 
 import { useState, useEffect } from 'react'
@@ -91,17 +89,25 @@ const App = () => {
     }, [])
     
     return (
-      <div>
-      <h2>Phonebook</h2>
+      <div className='app-container'>
 
-      <Filter filterList={filterList} setFilterList={setFilterList} persons={persons} />
+      <aside className='app-sidebar'>
+        <header className="phonebook-header">
+          <h2>Phonebook</h2>
+          <Filter filterList={filterList} setFilterList={setFilterList} persons={persons} />
+        </header>
 
-      <h2>Add new</h2>
+        <section className="phonebook-add">
+          <h2>Add new</h2>        
+          <PersonForm onSubmit={addPerson} onChange={onChangeForm} newPerson={newPerson} />
+        </section>
+      </aside>
       
-      <PersonForm onSubmit={addPerson} onChange={onChangeForm} newPerson={newPerson} />
 
-      <h2>Numbers</h2>
-      <Persons personList={filterList} deleteAction={onPersonDelete}/>
+      <section className='phonebook-numbers'>
+        <h2>Numbers</h2>
+        <Persons personList={filterList} deleteAction={onPersonDelete}/>
+      </section>
     </div>
   )
 }

@@ -1,20 +1,20 @@
 const Persons = ({personList, deleteAction}) => {
   return (
-    <>
+    <div className="phonebook-list">
      {personList.map(person => (
-        <div key={person.id}>
+        <div className="person-card" key={person.id}>
           <p>
-            Name: {person.name}
+            <strong>Name:</strong> {person.name}
           </p>
           <p>
-            Phone: {person.number}
+            <strong>Phone: </strong> {person.number}
           </p>
           <div>
-            <button id={person.id} onClick={deleteAction}>delete</button>
+            <button className="button color-danger" id={person.id} onClick={deleteAction}>delete</button>
           </div>
         </div>
       ))}
-    </>
+    </div>
   )
 }
 

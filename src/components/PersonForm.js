@@ -1,26 +1,28 @@
 const PersonForm = ({onSubmit, newPerson, onChange}) => {
 return (
-        <form onSubmit={onSubmit}>
-        <div>
+        <form className="phonebook-form" onSubmit={onSubmit}>
+        <div className="phonebook-field">
           <label htmlFor="name">Name: </label>
-          <input 
+          <input
+            className="input-concrete" 
             id='name'
             type="text" 
             value={newPerson.name} 
             onChange={onChange} />
         </div>
-        <div>
+        <div className="phonebook-field">
           <label htmlFor="number">Number: </label>
-          <input 
+          <input
+            className="input-concrete" 
             id='number'
             type="text" 
             value={newPerson.number} 
             onChange={onChange} />
         </div>
-        <div>
-          <button
+        <div className="phonebook-actions">
+          <button className="button color-blue"
            type="submit"
-           >add</button>
+           >+ add</button>
         </div>
       </form>
 )
