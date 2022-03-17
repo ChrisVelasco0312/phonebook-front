@@ -8,7 +8,8 @@ return (
             id='name'
             type="text" 
             value={newPerson.name} 
-            onChange={onChange} />
+            onChange={onChange} 
+            required/>
         </div>
         <div className="phonebook-field">
           <label htmlFor="number">Number: </label>
@@ -17,7 +18,8 @@ return (
             id='number'
             type="text" 
             value={newPerson.number} 
-            onChange={onChange} />
+            onChange={onChange}
+            required />
         </div>
         <div className="phonebook-actions">
           <button className="button color-blue"
