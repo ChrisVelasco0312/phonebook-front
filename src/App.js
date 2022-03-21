@@ -33,6 +33,7 @@ const App = () => {
         personService
           .update(personToUpdate.id, {...newPerson, number: newPerson.number})
           .then(returnedPerson => {
+            console.log(returnedPerson)
             setPersons(persons.map(person => person.id !== personToUpdate.id ? person : returnedPerson ))
             setFilterList(persons.map(person => person.id !== personToUpdate.id ? person : returnedPerson ))
             setNewPerson(initialPerson)
@@ -41,7 +42,6 @@ const App = () => {
       return 
     }
     const personObject = {
-      id: persons.length + 1,
       name: newPerson.name,
       number: newPerson.number
     }
@@ -62,7 +62,7 @@ const App = () => {
     }
     
     const onPersonDelete = (event) => {
-      const personId = Number(event.target.id)
+      const personId = event.target.id
       const personToDelete = persons.find(person => person.id === personId)
       
       if (!personToDelete) return 
